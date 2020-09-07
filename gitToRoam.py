@@ -28,6 +28,7 @@ def main():
 class GitToRoam:
     def __init__(self, dir_path):
         self.dir_path = dir_path
+        self.toc_pages = []  # The final pages JSON needs to be an array
         self.pages = []
 
     def run_traversal(self):
@@ -36,11 +37,12 @@ class GitToRoam:
         directory_name = os.path.basename(directory)
         print('Creating top-level page with name: %s' % directory_name)
         toc_page = RoamPage(directory_name)
+        self.toc_pages.append(toc_page)
 
         # Run recursive runTraversal
         self.__run_traversal(directory, toc_page)
 
-        toc_json = jsonpickle.encode(toc_page, unpicklable=False)
+        toc_json = jsonpickle.encode(self.toc_pages, unpicklable=False)
         pages_json = jsonpickle.encode(self.pages, unpicklable=False)
         return toc_json, pages_json
 
